@@ -11,7 +11,8 @@ public class ThreadPool {
     private final Channel<WorkerThread> freeWorkers;
     private final int maxSize;
 
-    public ThreadPool(int maxSize) {
+    public ThreadPool(int maxSize)
+    {
         this.maxSize = maxSize;
         this.freeWorkers = new Channel<> (maxSize);
         this.allWorkers = new LinkedList<> ();
@@ -21,7 +22,8 @@ public class ThreadPool {
     }
 
     public void execute(Runnable task) {
-        if (freeWorkers.isEmpty () && (allWorkers.size () < maxSize)) {
+        if (freeWorkers.isEmpty () && (allWorkers.size () < maxSize))
+        {
             WorkerThread workerThread = new WorkerThread (this);
             allWorkers.addLast(workerThread);
             freeWorkers.put(workerThread);

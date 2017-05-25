@@ -1,9 +1,10 @@
 package netUtils;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import app.Request;
+
+import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Created by leon2 on 25.05.2017.
@@ -23,17 +24,24 @@ public class Session implements Runnable {
     @Override
     public void run() {
         try {
-            DataInputStream inputStream = new DataInputStream(this.socket.getInputStream());
-            DataOutputStream outputStream = new DataOutputStream(this.socket.getOutputStream());
-            String inMsg;
+            //DataInputStream inputStream = new DataInputStream(this.socket.getInputStream());
+            //DataOutputStream outputStream = new DataOutputStream(this.socket.getOutputStream());
 
-            while (true) {
-                inMsg = inputStream.readUTF();
-                classMH.handle("Client #" + this.id + ": " + inMsg);
-                outputStream.writeUTF("Done");
-                outputStream.flush();
+            ObjectInputStream inputStream = new ObjectInputStream(this.socket.getInputStream());
+            ObjectOutputStream outputStream = new ObjectOutputStream(this.socket.getOutputStream());
+
+            while (true)
+            {
+                Request request = (Request) inputStream.readObject();
+                classMH.handle( request, outputStream);
+                //outputStream.writeUTF("Done");
+                //outputStream.flush();
             }
         } catch (IOException e) {
+            System.out.println("client disconnect!");
+        }
+        catch (ClassNotFoundException e)
+        {
             e.printStackTrace();
         }
     }

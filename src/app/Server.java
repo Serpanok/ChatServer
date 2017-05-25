@@ -23,6 +23,7 @@ public class Server implements Runnable, Serializable {
     private Dispatcher dispatcher;
     private Host host;
     private MessageHandlerFactory classMHF;
+
     public Server (int port, int maxThreadCount, Class classMHF) {
         this.port = port;
         Server.maxThreadCount = maxThreadCount;
@@ -35,6 +36,7 @@ public class Server implements Runnable, Serializable {
 
     public void stop(){
         System.out.println("Server's stopped");
+
         host.stop();
         dispatcher.stop();
         threadPool.stop();
@@ -42,10 +44,16 @@ public class Server implements Runnable, Serializable {
 
     public void run (){
         System.out.println("Server has started. Sessions limit: " + maxThreadCount);
+
+        MessagesDB messagesDB = new MessagesDB(10);
+
         Channel<Session> channel = new Channel<>(DEFAULT_CHANNEL_SIZE);
+
         threadPool = new ThreadPool (maxThreadCount);
         dispatcher = new Dispatcher (channel, threadPool);
-        new Thread(dispatcher).start ();
+
+        new Thread(dispatcher).start();
+
         host = new Host (port, threadPool, classMHF);
         host.run();
     }

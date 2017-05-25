@@ -25,22 +25,23 @@ public class Host {
 
     public void run(){
         try {
-            ServerSocket serverSocket = new ServerSocket (port);
+            ServerSocket serverSocket = new ServerSocket(port);
             isAlive = true;
             int sessionID = -1;
 
-            while (isAlive) try {
-                Socket socket = serverSocket.accept ();
+            while (isAlive)
+                try {
+                    Socket socket = serverSocket.accept();
 
-                synchronized (lock) {
-                    Session session = new Session (socket, ++sessionID, classMH);
-                    threadPool.execute (session);
+                    synchronized (lock) {
+                        Session session = new Session(socket, ++sessionID, classMH);
+                        threadPool.execute(session);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace ();
-            }
         } catch (IOException e) {
-            e.printStackTrace ();
+            e.printStackTrace();
         }
     }
     public void stop () {

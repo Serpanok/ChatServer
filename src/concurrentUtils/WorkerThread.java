@@ -19,8 +19,10 @@ class WorkerThread implements Runnable {
 
     public void run(){
         synchronized (lock){
-            while (true){
-                try{
+            while (true)
+            {
+                try
+                {
                     while (currentTask == null)
                         try{
                             lock.wait();
