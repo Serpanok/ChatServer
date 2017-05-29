@@ -32,4 +32,12 @@ public class Request implements Serializable {
         this.sendMessage = null;
         this.lastId = -1;
     }
+
+    public Request( int lastId ) {
+        this.type = 0;
+        this.lastId = lastId;
+
+        this.sendMessage = null;
+        this.msgs = null;
+    }
 }

@@ -19,6 +19,9 @@ public class Server implements Runnable, Serializable {
     private static final Object lock = new Object ();
     private static int maxThreadCount;
     private final int port;
+
+    public static MessagesCache messagesCache;
+
     private ThreadPool threadPool;
     private Dispatcher dispatcher;
     private Host host;
@@ -46,6 +49,8 @@ public class Server implements Runnable, Serializable {
         System.out.println("Server has started. Sessions limit: " + maxThreadCount);
 
         MessagesDB messagesDB = new MessagesDB(10);
+        messagesCache = new MessagesCache(10);
+        messagesCache.cacheDB();
 
         Channel<Session> channel = new Channel<>(DEFAULT_CHANNEL_SIZE);
 

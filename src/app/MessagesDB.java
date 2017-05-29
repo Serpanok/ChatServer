@@ -39,36 +39,31 @@ public class MessagesDB {
         }
     }
 
-    public static int insertMessage( String username, String message )
+    public static Message insertMessage( String username, String message )
     {
         try {
             connection.execute("INSERT INTO 'messages' ('username', 'message') VALUES ( '" + username + "', '" + message + "' );");
 
-            return connection.getLastId();
+            Message msg = new Message(username, message, connection.getLastId());
+
+            return msg;
         }
         catch (SQLException e)
         {
             e.printStackTrace();
-            return -1;
+            return null;
         }
         catch (ClassNotFoundException e)
         {
             e.printStackTrace();
-            return -1;
+            return null;
         }
     }
 
-    public static MessagePackage getMessages( int lastId )
+    public static ResultSet getAllMessages( )
     {
-        MessagePackage messagePackage = new MessagePackage( packageLimit );
-
-        try {
-            ResultSet resultSet = connection.executeQuery("SELECT * FROM messages WHERE id > " + lastId + " LIMIT " + packageLimit);
-
-            while(resultSet.next())
-            {
-                messagePackage.insert(new Message( resultSet.getString("username"), resultSet.getString("message"), resultSet.getInt("id") ));
-            }
+         try {
+           return connection.executeQuery("SELECT * FROM messages");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -77,7 +72,25 @@ public class MessagesDB {
             e.printStackTrace();
         }
 
-        return messagePackage;
+        return null;
+    }
+
+    public static ResultSet getResultQuery( int lastId )
+    {
+        try {
+            ResultSet resultSet = connection.executeQuery("ads");
+
+
+            return resultSet;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public void close()
